@@ -23,6 +23,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	final int GAME = 1;
 	final int END = 2;
 	int currentState = MENU;
+	int score = 0;
 	
 	public static BufferedImage image;
 	public static boolean needImage = true;
@@ -59,6 +60,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	
 	public void updateGameState() {
 		objectManager.update();
+		if (objectManager.rocket.isActive == false) {
+			currentState = END;
+		}	
 	}
 	
 	public void updateEndState() {
@@ -86,11 +90,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void drawGameState(Graphics g) {
 		if (gotImage) {
 			g.drawImage(image, 0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT, null);
+
 		} else {
 			g.setColor(Color.BLUE);
 			g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+			
 		}
 		objectManager.draw(g);
+		
+		g.setFont(textFont);
+		g.setColor(Color.YELLOW);
+		g.drawString("SCORE:" + objectManager.getScore(), LeagueInvaders.WIDTH - 150, 50);
 	}
 	
 	public void drawEndState(Graphics g) {
@@ -103,7 +113,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 		g.setFont(textFont);
 		g.setColor(Color.YELLOW);
-		g.drawString("ENEMIES KILLED", 150, 400);
+		g.drawString("ENEMIES KILLED: " + objectManager.getScore(), 150, 400);
 		
 		g.setFont(textFont);
 		g.setColor(Color.YELLOW);
@@ -136,6 +146,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		if (e.getKeyCode()==KeyEvent.VK_ENTER) {
 		    if (currentState == END) {
 		    	alienSpawn.stop();
+		    	ship = new Rocketship(250, 700, 50, 50);
+		    	objectManager = new ObjectManager(ship);
+		    	score = 0;
 		        currentState = MENU;
 		    } else {
 		        currentState++;
@@ -169,8 +182,23 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (e.getKeyCode()==KeyEvent.VK_UP) {
+		    System.out.println("UP");
+		    ship.yVelocity = 0;
+		}
+		if (e.getKeyCode()==KeyEvent.VK_DOWN) {
+		    System.out.println("DOWN");
+		    ship.yVelocity = 0;
+		}
+		if (e.getKeyCode()==KeyEvent.VK_LEFT) {
+		    System.out.println("LEFT");
+		    ship.xVelocity = 0;
+		}
+		if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
+		    System.out.println("RIGHT");
+		    ship.xVelocity = 0
+		    		;
+		}
 	}
 	void loadImage(String imageFile) {
 	    if (needImage) {

@@ -6,6 +6,8 @@ import javax.imageio.ImageIO;
 
 public class Rocketship extends GameObject {
 	int speed;
+	int xVelocity = 0;
+	int yVelocity = 0;
 	public static BufferedImage image;
 	public static boolean needImage = true;
 	public static boolean gotImage = false;
@@ -15,6 +17,28 @@ public class Rocketship extends GameObject {
 		speed = 10;
 		if (needImage) {
 		    loadImage ("rocket.png");
+		}
+	}
+	
+	public void update() {
+		super.update();
+		if (x + width < LeagueInvaders.WIDTH && x > 0) {
+			x += xVelocity;
+		} else {
+			if (x <= 0) {
+				x = 1;
+			} else {
+				x = LeagueInvaders.WIDTH - width - 1;
+			}
+		}
+		if (y + height + 30 < LeagueInvaders.HEIGHT && y > 0) {
+			y += yVelocity;
+		} else {
+			if (y <= 0) {
+				y = 1;
+			} else {
+				y = LeagueInvaders.HEIGHT - height - 31;
+			}
 		}
 	}
 	
@@ -33,25 +57,25 @@ public class Rocketship extends GameObject {
 	
 	public void right() {
 		if (x + width < LeagueInvaders.WIDTH) {
-			x += speed;
+			xVelocity = speed;
 		}
 	}
 	
 	public void left() {
 		if (x > 0) {
-			x -= speed;
+			xVelocity = -speed;
 		}
 	}
 	
 	public void up() {
 		if (y > 0) {
-			y -= speed;
+			yVelocity = -speed;
 		}
 	}
 	
 	public void down() {
 		if (y + height + 30 < LeagueInvaders.HEIGHT) {
-			y += speed;
+			yVelocity = speed;
 		}
 	}
 	void loadImage(String imageFile) {

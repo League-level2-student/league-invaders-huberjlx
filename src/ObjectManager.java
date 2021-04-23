@@ -7,6 +7,7 @@ import java.util.Random;
 public class ObjectManager implements ActionListener {
 	Rocketship rocket;
 	Random random = new Random();
+	int score = 0;
 	
 	ArrayList <Projectile> projectiles = new ArrayList <Projectile> ();
 	ArrayList <Alien> aliens = new ArrayList <Alien> ();
@@ -24,6 +25,7 @@ public class ObjectManager implements ActionListener {
 	}
 	
 	public void update() {
+		rocket.update();
 		for (Alien alien : aliens) {
 			alien.update();
 			if (alien.y + 80 > LeagueInvaders.HEIGHT) {
@@ -37,10 +39,27 @@ public class ObjectManager implements ActionListener {
 				projectile.isActive = false;
 			}
 		}
+		checkCollision();
+		purgeObjects();
+	}
+	public int getScore() {
+		return score;
 	}
 	
 	public void checkCollision() {
-		
+		for (Alien alien : aliens) {
+			if (rocket.collisionBox.intersects(alien.collisionBox)) {
+				alien.isActive = false;
+				rocket.isActive = false;
+			}
+			for (Projectile projectile : projectiles) {
+				if (projectile.collisionBox.intersects(alien.collisionBox)) {
+					projectile.isActive = false;
+					alien.isActive = false;
+					score += 1;
+				}
+			}
+		}
 	}
 	
 	public void draw(Graphics g) {
